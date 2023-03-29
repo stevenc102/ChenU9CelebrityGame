@@ -109,8 +109,8 @@ public class CelebrityPanel extends JPanel implements ActionListener{
     guessField = new JTextField("Enter guess here", 30);
     success = "You guessed correctly!!! \nNext Celebrity clue is: ";
     tryAgain = "You have chosen poorly, try again!\nThe clue is: ";
-    seconds = 60;
-
+    seconds = 10000;
+    countdownTimer = new Timer(1000, null);
     setupPanel();
     setupLayout();
     setupListeners();
@@ -179,6 +179,8 @@ public class CelebrityPanel extends JPanel implements ActionListener{
    */
   private void setupListeners() {
       guessButton.addActionListener(this);
+      countdownTimer.addActionListener(this);
+      countdownTimer.start();
   }
   
   /**
@@ -187,7 +189,8 @@ public class CelebrityPanel extends JPanel implements ActionListener{
    * the end.
    */
   private void timerFires() {
-
+    seconds --;
+    dynamicTimerLabel.setText("" + seconds);
   }
   
   /**
@@ -198,6 +201,9 @@ public class CelebrityPanel extends JPanel implements ActionListener{
    */
   public void addClue(String clue) {
     clueArea.setText("The clue is: " + clue);
+    seconds = 60;
+    dynamicTimerLabel.setText("" + seconds);
+    countdownTimer.restart();
   }
   
   /**
@@ -213,6 +219,9 @@ public class CelebrityPanel extends JPanel implements ActionListener{
         clueArea.append(controller.sendClue());
       } else {
         clueArea.append("\nNo more celebrities to guess.");
+        countdownTimer.stop();
+        staticTimerLabel.setText("YOU WIN!!! :OOOO");
+        dynamicTimerLabel.setText("");
         guessButton.setEnabled(false);
         guessField.setEnabled(false);
       }
@@ -229,6 +238,17 @@ public class CelebrityPanel extends JPanel implements ActionListener{
       JButton button = (JButton) source;
       if (button.getText().equals("Submit guess")) {
         updateScreen();
+      }
+    } else if (source instanceof Timer) {
+      Timer time = (Timer) source;
+      if (seconds != 0 && controller.getCelebrityGameSize() > 0) {
+        timerFires();
+      } else if (seconds == 0){
+        countdownTimer.stop();
+        staticTimerLabel.setText("Time's up! YOU LOSE!!! :O");
+        dynamicTimerLabel.setText("");
+        guessButton.setEnabled(false);
+        guessField.setEnabled(false);
       }
     }
   }
