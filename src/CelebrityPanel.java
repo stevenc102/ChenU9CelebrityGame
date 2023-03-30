@@ -181,6 +181,7 @@ public class CelebrityPanel extends JPanel implements ActionListener{
       guessButton.addActionListener(this);
       countdownTimer.addActionListener(this);
       countdownTimer.start();
+      resetButton.addActionListener(this);
   }
   
   /**
@@ -238,6 +239,17 @@ public class CelebrityPanel extends JPanel implements ActionListener{
       JButton button = (JButton) source;
       if (button.getText().equals("Submit guess")) {
         updateScreen();
+      } else if (button.getText().equals("Start again")) {
+        controller.restartGame();
+        setBackground(Color.WHITE);
+        seconds = 60;
+        countdownTimer.restart();
+        staticTimerLabel.setText("Time remaining: ");
+        dynamicTimerLabel.setText("" + seconds);
+        guessButton.setEnabled(true);
+        guessField.setEnabled(true);
+        guessField.setText("Enter guess here");
+
       }
     } else if (source instanceof Timer) {
       Timer time = (Timer) source;

@@ -111,4 +111,11 @@ public class CelebrityGame {
 	public String sendClue() {
 		return gameCelebrity.getClue(); // stub
 	}
+
+	public void restartGame() {
+		celebGameList = new ArrayList<Celebrity>();
+		gameCelebrity = null;
+		gameWindow.restartGame();
+
+	}
 }
